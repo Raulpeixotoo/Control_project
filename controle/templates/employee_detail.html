@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ employee.name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title_name">{{ employee.name }}</h1>
+        <div class="employee-details">
+            <p><strong>Cargo:</strong> {{ employee.position }}</p>
+            <p><strong>Departamento:</strong> {{ employee.department }}</p>
+            <p><strong>Data de Admissão:</strong> {{ employee.admission_date }}</p>
+        </div>
+
+        <h2 class="title_name" >Advertências</h2>
+        <a href="{% url 'add_warning' employee.pk %}" class="button_add">Adicionar Advertência</a>
+        <ul>
+            {% for warning in employee.warnings.all %}
+                <li class="attachments_view">
+                    <strong>{{ warning.get_warning_type_display }} - {{ warning.date }} </strong>
+                    <p>{{ warning.description }}</p>
+                    <p>Responsável: {{ warning.responsible }}</p>
+                    <h3 class="title_name">Anexos</h3>
+                    <div class="attachments">
+                        <ul>
+                        {% for attachment in warning.attachments.all %}
+                            <li>
+                                <span>{{ attachment.file.name|default:"Sem nome" }}</span>
+                                <a href="{{ attachment.file.url }}" target="_blank"> -- Download </a>
+<!--                          <a href="{% url 'delete_attachment' attachment.pk %}" 
+                                   onclick="return confirm('Tem certeza que deseja remover este anexo?');" 
+                                   class="button cancel">Remover</a>    -->      
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <div class="actions">
+                    <a href="{% url 'add_attachment' warning.pk %}" class="button">Adicionar Anexo</a>
+                    <a href="{% url 'home' %}" class="button">Voltar ao Início</a>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página Inicial</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles_home.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="info-container">
+            <h1 class='title'>Bem-vindo, {{ user.username }}!</h1>
+            <p>O que você precisa hoje?</p>
+
+            <!-- Botões de Navegação -->
+            <div class="button-group">
+                <a href="{% url 'add_employee' %}" class="button">Adicionar Funcionário</a>
+                <a href="{% url 'employee_list' %}" class="button">Funcionários</a>
+                <a href="{% url 'attendance_table' %}" class="button">Chamada</a>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class='title'>Presenças e Faltas no Mês</h2>
+
+            <!-- Filtros -->
+        <!-- Filtro de Intervalo de Datas -->
+        <form method="get" style="margin-bottom: 20px;margin-left: 20%;">
+            <input type="date" name="start_date" id="start_date" value="{{ start_date|date:'Y-m-d' }}">
+
+            <label for="end_date">Entre:</label>
+            <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}">
+
+            <label for="shift"> Turno:</label>
+            <select name="shift" id="shift">
+                <option value="">Todos</option>
+                <option value="1" {% if selected_shift == '1' %}selected{% endif %}>Turno 1</option>
+                <option value="2" {% if selected_shift == '2' %}selected{% endif %}>Turno 2</option>
+                <option value="3" {% if selected_shift == '3' %}selected{% endif %}>Turno 3</option>
+            </select>
+
+            <button type="submit" class="button">Filtrar</button>
+        </form>
+
+        <!-- Exibir Absenteísmo -->
+        <p>Absenteísmo no período: <strong>{{ absenteeism }}%</strong></p>
+        <p>Média de Presença no período: <strong>{{ average_presence_per_day }} </strong></p>
+        <p>Média de Faltas no período: <strong>{{ average_absence_per_day }}</strong></p>
+        <h2 class='title'>Grafico de Presença</h2>
+
+        <!-- Gráfico de Barras -->
+        <canvas id="attendanceChart" width="1600" height="1200"></canvas>
+        
+        </div>
+
+
+    <!-- Script para o Gráfico -->
+    <script>
+        const attendanceData = {{ attendance_data|safe }};
+    
+        // Extrair dados para o gráfico
+        const labels = attendanceData.map(item => item.date);
+        const presenceData = attendanceData.map(item => item.presence);
+        const absenceData = attendanceData.map(item => item.absence);
+    
+        // Configurar o gráfico
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Presenças',
+                        data: presenceData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+                    {
+                        label: 'Faltas',
+                        data: absenceData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: true, // Torna o gráfico responsivo
+                maintainAspectRatio: false, // Desativa a proporção fixa
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: Math.max(...presenceData, ...absenceData) + 1, // Define um limite máximo para o eixo Y
+                        min: - 5,
+                        ticks: {
+                            stepSize: 1, // Incremento de 1 no eixo Y
+                        },
+                    },
+                    x: {
+                        ticks: {
+                            autoSkip: true, // Evita que os rótulos do eixo X fiquem sobrepostos
+                            maxRotation: 45, // Rotação máxima dos rótulos
+                            minRotation: 0, // Rotação mínima dos rótulos
+                        },
+                    },
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value || '', // Exibe apenas valores não nulos
+                        color: '#000',
+                        font: {
+                            weight: 'bold',
+                        },
+                    },
+                },
+            },
+            plugins: [ChartDataLabels], // Habilita o plugin
+        });
+    </script>
+    </div>
+</body>
+</html>

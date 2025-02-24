@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title >Adicionar Funcionário</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title_name">Adicionar Funcionário</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="actions">
+            <button type="submit" class"button">Salvar</button>
+            <a href="{% url 'home' %}" class="button">Voltar ao Início</a>
+            </div>
+        </form>        
+    </div>
+</body>
+</html> 

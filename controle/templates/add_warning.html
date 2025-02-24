@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title class="title_name">Adicionar Advertência</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title_name">Adicionar Advertência</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+        </form>
+        <div class="actions">
+            <button type="submit">Salvar</button>
+            <a href="{% url 'home' %}" class="button">Voltar ao Início</a>
+        </div>
+    </div>            
+</body>
+</html>

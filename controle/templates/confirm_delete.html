@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmar Exclusão</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Confirmar Exclusão</h1>
+        <p>Você tem certeza que deseja excluir o funcionário "{{ employee.name }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+        </form>
+        <div class="actions">
+            <button type="submit" class="button cancel">Sim, Excluir</button>
+            <a href="{% url 'home' %}" class="button">Cancelar</a>
+        </div>
+    </div>
+</body>
+</html>

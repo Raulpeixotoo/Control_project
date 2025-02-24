@@ -1,0 +1,278 @@
+/* Estilo Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #2c2b2b;
+    line-height: 1.6;
+    padding: 20px;  
+}
+
+
+.container_user {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+.container_user h1{
+    text-align: center;
+    color: #dc0032;
+    margin-top: 20px;
+}
+.container_user a{
+    position: absolute;
+}
+
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+.container a{
+    text-align: center;
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+h1{
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+h3{
+    color: #2c3e50;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+a {
+    color: #dc0032;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #2c3e50;
+}
+
+
+/* Formulários */
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #ccc;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Listas */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+li a {
+    font-weight: bold;
+
+}
+.attachments_view{
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+
+
+
+/* Detalhes do Funcionário */
+.employee-details p {
+    margin: 25px 10px;
+    align-items: center;
+}
+
+.employee-details h2 {
+    margin-top: 120px;
+}
+
+/* Anexos */
+.attachments ul {
+    padding-left: 20px;
+}
+
+.attachments li {
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attachments a {
+    color: #dc0032;
+    font-weight: bold;
+}
+
+
+.confirm-delete {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ffeeba;
+    margin-bottom: 20px;
+}
+
+.title_name{
+    color: #dc0032;
+    text-align: center;
+}
+
+a.button_add{
+    color: #dc0032;
+    margin: 5px 10px;
+}
+
+a.button_add:hover{
+    background-color: #dc0032;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    border: 25px;
+
+}
+
+.button {
+    color: #2c2b2b;
+    background-color: #dc0032;
+}
+
+/* tela de login, fazer!! */
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.messages {
+    margin-top: 15px;
+    color: #e74c3c;
+}
+
+
+
+
+/*barra de pesquisa */
+.search-form {
+    margin-bottom: 20px;
+}
+
+.search-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.search-form button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+    background-color: #2980b9;
+}
+
+
+

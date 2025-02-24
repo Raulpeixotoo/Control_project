@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Funcionários</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container_user">
+        <h1>Olá, Raul! {{ employee.user }}</h1>
+    </div>
+
+    <div class="container">
+        <h1>Lista de Funcionários</h1>
+
+        <!-- Barra de Pesquisa -->
+        <form method="get" class="search-form">
+            {{ form.as_p }}
+        <!--     <button type="submit" placeholder="Faça uma busca" class="button">Pesquisar</button> -->
+        </form>
+
+        <!-- Adicionar Funcionário -->
+        <a href="{% url 'add_employee' %}" class="button">Adicionar Funcionário</a>
+
+        <!-- Lista de Funcionários -->
+        <ul>
+            {% for employee in employees %}
+                <li>
+                    <strong>{{ employee.name }}</strong>
+                    ({{ employee.position }}, {{ employee.department }})
+                    <a href="{% url 'employee_detail' employee.pk %}">Ver Detalhes</a>
+                </li>
+            {% empty %}
+                <li>Nenhum funcionário encontrado.</li>
+            {% endfor %}
+        </ul>
+        
+    </div>
+    <a href="{% url 'home' %}" class="button">Voltar a Home</a>
+</body>
+</html>

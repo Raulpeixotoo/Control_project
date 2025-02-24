@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adicionar Anexo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Adicionar Anexo para a Advertência de {{ warning.employee.name }}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+        <div class="actions">
+            <button type="submit">Enviar Anexo</button>
+            <a href="{% url 'home' %}" class="button cancel">Voltar ao Início</a>
+        </div>
+        </form>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrar Chamada</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Registrar Chamada</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class='button'>Salvar</button>
+        </form>
+        <a href="{% url 'home' %}" class='button'>Voltar</a>
+    </div>
+</body>
+</html>

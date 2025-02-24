@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chamada de Funcionários</title>
+    {% load static %}
+    {% load custom_filters %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Chamada de Funcionários</h1>
+
+        <!-- Botão para Registrar Nova Chamada -->
+        <a href="{% url 'add_attendance' %}" class="button">Registrar Chamada</a>
+
+        <!-- Tabela de Chamadas -->
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Funcionário</th>
+                    {% for date in dates %}
+                        <th>{{ date|date:"d/m" }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.name }} (Turno {{ employee.get_shift_display }})</td>
+                        {% for date in dates %}
+                            <td>
+                                <!-- Formulário Inline para Editar Chamadas -->
+                                <form method="post" action="{% url 'update_attendance' employee.pk date|date:'Y-m-d' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <select name="status" onchange="this.form.submit()">
+                                        <option value="P" {% if attendance_data|get_item:employee|get_item:date == 'P' %}selected{% endif %}>Presença</option>
+                                        <option value="F" {% if attendance_data|get_item:employee|get_item:date == 'F' %}selected{% endif %}>Falta</option>
+                                        <option value="A" {% if attendance_data|get_item:employee|get_item:date == 'A' %}selected{% endif %}>Atestado</option>
+                                        <option value="N" {% if attendance_data|get_item:employee|get_item:date == 'N' %}selected{% endif %}>Férias</option>
+                                    </select>
+                                </form>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botão para Voltar ao Início -->
+        <a href="{% url 'home' %}" class="button cancel">Voltar ao Início</a>
+    </div>
+</body>
+</html>
