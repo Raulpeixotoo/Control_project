@@ -9,17 +9,14 @@
     <div class="container_user">
         <h1>Olá, Raul! {{ employee.user }}</h1>
     </div>
-
     <div class="container">
         <h1>Lista de Funcionários</h1>
 
         <!-- Barra de Pesquisa -->
         <form method="get" class="search-form">
-            {{ form.as_p }}
-        <!--     <button type="submit" placeholder="Faça uma busca" class="button">Pesquisar</button> -->
+            <input type="text" name="search" placeholder="Faça uma busca" value="{{ request.GET.search }}">
+            <button type="submit" class="button">Pesquisar</button>
         </form>
-
-        
 
         <!-- Lista de Funcionários -->
         <ul>
@@ -33,11 +30,9 @@
                 <li>Nenhum funcionário encontrado.</li>
             {% endfor %}
         </ul>
-        
+
         <button><a href="{% url 'add_employee' %}" class="button">Adicionar Funcionário</a></button>
         <button><a href="{% url 'home' %}" class="button">Voltar a Home</a></button>
-        
     </div>
-
 </body>
 </html>

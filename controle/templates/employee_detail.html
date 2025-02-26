@@ -3,10 +3,11 @@
 <head>
     <title>{{ employee.name }}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <div class="container">
+        <a href="{% url 'employee_list' %}" class="button">Todos os Funcionarios</a>
         <h1 class="title_name">{{ employee.name }}</h1>
         <div class="employee-details">
             <p><strong>Cargo:</strong> {{ employee.position }}</p>
@@ -39,10 +40,9 @@
                 </li>
                 <div class="actions">
                     <a href="{% url 'add_attachment' warning.pk %}" class="button">Adicionar Anexo</a>
-                    <a href="{% url 'home' %}" class="button">Voltar ao Início</a>
                 </div>
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
     </div>
 </body>
 </html>

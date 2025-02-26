@@ -36,8 +36,11 @@
                 <!-- Botão de Aplicar Filtros -->
                 <button type="submit" class="button">Filtrar</button>
             </form>
-        </div>
 
+            
+        </div>
+        <a href="{% url 'export_attendance' %}?{{ request.GET.urlencode }}" class="button">Exportar para Excel</a>
+        <a href="{% url 'home' %}" class="button">Voltar ao Início<a> 
     </div>
     
 
@@ -79,9 +82,6 @@
     </table>
         <!-- Botão para Salvar Todas as Alterações -->
         <button id="save-all" class="button">Salvar Alterações</button>
-        <button> <a href="{% url 'home' %}" class="button">Voltar ao Início<a> </button>
-        <a href="{% url 'export_attendance' %}?{{ request.GET.urlencode }}" class="button">Exportar para Excel</a>
-
 
 
     <script>

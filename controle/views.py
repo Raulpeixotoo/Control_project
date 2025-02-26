@@ -42,8 +42,18 @@ def home(request):
 # Lista de Funcionários
 @login_required
 def employee_list(request):
+    # Obter o termo de pesquisa (se fornecido)
+    search_query = request.GET.get('search', '')
+
+    # Filtrar funcionários pelo nome (se fornecido)
     employees = Employee.objects.all()
-    return render(request, 'employee_list.html', {'employees': employees})
+    if search_query:
+        employees = employees.filter(name__icontains=search_query)
+
+    return render(request, 'employee_list.html', {
+        'employees': employees,
+        'search_query': search_query,
+    })
 
 # Detalhes de um Funcionário
 @login_required
@@ -411,14 +421,6 @@ def update_attendance(request, employee_pk, date):
             print('Erro:', str(e))
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método inválido'})
-
-
-
-
-
-
-
-
 
 
 

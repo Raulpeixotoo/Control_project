@@ -134,6 +134,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ] # Caminho para a pasta 'static' global
 
-LOGIN_REDIRECT_URL = '/employee_list/'  # Para onde o usuário vai após o login
+LOGIN_REDIRECT_URL = '/'  # Para onde o usuário vai após o login
 LOGOUT_REDIRECT_URL = '/login/'  # Redireciona para a página de login após o logout
 LOGIN_URL = '/login/'  # Para onde o usuário será redirecionado se tentar acessar uma página protegida sem estar logado
