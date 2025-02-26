@@ -11,6 +11,15 @@ from openpyxl import Workbook
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import pandas as pd
+from django.template.loader import render_to_string
+from datetime import datetime, timedelta
+from django.shortcuts import render
+from django.http import HttpResponse
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
 
 #login e auth
@@ -421,6 +430,247 @@ def update_attendance(request, employee_pk, date):
             print('Erro:', str(e))
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método inválido'})
+
+
+    # Obter os parâmetros de filtro
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+    selected_shift = request.GET.get('shift', '')
+
+    # Definir datas padrão (últimos 30 dias)
+    if not start_date_str or not end_date_str:
+        today = datetime.now().date()
+        start_date = today.replace(day=1)  # Primeiro dia do mês atual
+        next_month = today.replace(day=28) + timedelta(days=4)  # Primeiro dia do próximo mês
+        end_date = next_month.replace(day=1) - timedelta(days=1)  # Último dia do mês atual
+    else:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+    # Filtrar registros de chamada pelo intervalo de datas e turno
+    attendances = Attendance.objects.filter(date__range=[start_date, end_date])
+    if selected_shift:
+        attendances = attendances.filter(employee__shift=selected_shift)
+
+    # Calcular estatísticas por funcionário
+    employees = Employee.objects.all()
+    report_data = []
+    for employee in employees:
+        employee_attendances = attendances.filter(employee=employee)
+        total_present = employee_attendances.filter(status='P').count()
+        total_absent = employee_attendances.filter(status='F').count()
+        total_medical = employee_attendances.filter(status='AT').count()
+        report_data.append({
+            'name': employee.name,
+            'position': employee.position,
+            'department': employee.department,
+            'total_present': total_present,
+            'total_absent': total_absent,
+            'total_medical': total_medical,
+        })
+
+    return render(request, 'report.html', {
+        'start_date': start_date,
+        'end_date': end_date,
+        'selected_shift': selected_shift,
+        'report_data': report_data,
+    })
+
+def export_to_excel(request):
+    # Obter os parâmetros de filtro
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+    selected_shift = request.GET.get('shift', '')
+
+    # Definir datas padrão (últimos 30 dias)
+    if not start_date_str or not end_date_str:
+        today = datetime.now().date()
+        start_date = today.replace(day=1)
+        next_month = today.replace(day=28) + timedelta(days=4)
+        end_date = next_month.replace(day=1) - timedelta(days=1)
+    else:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+    # Filtrar registros de chamada pelo intervalo de datas e turno
+    attendances = Attendance.objects.filter(date__range=[start_date, end_date])
+    if selected_shift:
+        attendances = attendances.filter(employee__shift=selected_shift)
+
+    # Calcular estatísticas por funcionário
+    employees = Employee.objects.all()
+    report_data = []
+    for employee in employees:
+        employee_attendances = attendances.filter(employee=employee)
+        total_present = employee_attendances.filter(status='P').count()
+        total_absent = employee_attendances.filter(status='F').count()
+        total_medical = employee_attendances.filter(status='AT').count()
+        report_data.append({
+            'Nome': employee.name,
+            'Cargo': employee.position,
+            'Departamento': employee.department,
+            'Presenças': total_present,
+            'Faltas': total_absent,
+            'Atestados': total_medical,
+        })
+
+    # Criar DataFrame e exportar para Excel
+    df = pd.DataFrame(report_data)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="relatorio_funcionarios.xlsx"'
+    df.to_excel(response, index=False, engine='openpyxl')
+    return response
+
+
+
+
+def generate_report(request):
+    # Obter os parâmetros de filtro
+    search_name = request.GET.get('search_name', '')
+    position_filter = request.GET.get('position', '')
+    department_filter = request.GET.get('department', '')
+    shift_filter = request.GET.get('shift', '')
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+
+    # Definir datas padrão (últimos 30 dias)
+    if not start_date_str or not end_date_str:
+        today = datetime.now().date()
+        start_date = today.replace(day=1)  # Primeiro dia do mês atual
+        next_month = today.replace(day=28) + timedelta(days=4)  # Primeiro dia do próximo mês
+        end_date = next_month.replace(day=1) - timedelta(days=1)  # Último dia do mês atual
+    else:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+    # Filtrar funcionários com base nos critérios
+    employees = Employee.objects.all()
+    if search_name:
+        employees = employees.filter(name__icontains=search_name)
+    if position_filter:
+        employees = employees.filter(position=position_filter)
+    if department_filter:
+        employees = employees.filter(department=department_filter)
+    if shift_filter:
+        employees = employees.filter(shift=shift_filter)
+
+    # Filtrar registros de chamada pelo intervalo de datas e funcionários filtrados
+    attendances = Attendance.objects.filter(date__range=[start_date, end_date], employee__in=employees)
+
+    # Calcular estatísticas por funcionário
+    report_data = [["Nome", "Cargo", "Departamento", "Turno", "Presenças", "Faltas", "Atestados"]]
+    for employee in employees:
+        employee_attendances = attendances.filter(employee=employee)
+        total_present = employee_attendances.filter(status='P').count()
+        total_absent = employee_attendances.filter(status='F').count()
+        total_medical = employee_attendances.filter(status='AT').count()
+        report_data.append([
+            employee.name,
+            employee.position,
+            employee.department,
+            f"Turno {employee.shift}",
+            str(total_present),
+            str(total_absent),
+            str(total_medical),
+        ])
+
+    return render(request, 'report.html', {
+        'start_date': start_date,
+        'end_date': end_date,
+        'search_name': search_name,
+        'position_filter': position_filter,
+        'department_filter': department_filter,
+        'shift_filter': shift_filter,
+        'report_data': report_data,
+    })
+
+def export_to_pdf(request):
+    # Obter os parâmetros de filtro
+    search_name = request.GET.get('search_name', '')
+    position_filter = request.GET.get('position', '')
+    department_filter = request.GET.get('department', '')
+    shift_filter = request.GET.get('shift', '')
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+
+    # Definir datas padrão (últimos 30 dias)
+    if not start_date_str or not end_date_str:
+        today = datetime.now().date()
+        start_date = today.replace(day=1)
+        next_month = today.replace(day=28) + timedelta(days=4)
+        end_date = next_month.replace(day=1) - timedelta(days=1)
+    else:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+    # Filtrar funcionários com base nos critérios
+    employees = Employee.objects.all()
+    if search_name:
+        employees = employees.filter(name__icontains=search_name)
+    if position_filter:
+        employees = employees.filter(position=position_filter)
+    if department_filter:
+        employees = employees.filter(department=department_filter)
+    if shift_filter:
+        employees = employees.filter(shift=shift_filter)
+
+    # Filtrar registros de chamada pelo intervalo de datas e funcionários filtrados
+    attendances = Attendance.objects.filter(date__range=[start_date, end_date], employee__in=employees)
+
+    # Calcular estatísticas por funcionário
+    report_data = [["Nome", "Cargo", "Departamento", "Turno", "Presenças", "Faltas", "Atestados"]]
+    for employee in employees:
+        employee_attendances = attendances.filter(employee=employee)
+        total_present = employee_attendances.filter(status='P').count()
+        total_absent = employee_attendances.filter(status='F').count()
+        total_medical = employee_attendances.filter(status='AT').count()
+        report_data.append([
+            employee.name,
+            employee.position,
+            employee.department,
+            f"Turno {employee.shift}",
+            str(total_present),
+            str(total_absent),
+            str(total_medical),
+        ])
+
+    # Criar PDF usando ReportLab
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+
+    # Estilo da tabela
+    table = Table(report_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
+    elements.append(table)
+    doc.build(elements)
+
+    # Retornar o PDF como resposta
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio_funcionarios.pdf"'
+    return response
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

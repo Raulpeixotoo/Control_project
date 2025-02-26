@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Relatório Gerencial</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Relatório Gerencial</h1>
+
+        <!-- Filtros -->
+        <form method="get" class="filter-form">
+            <label for="search_name">Nome:</label>
+            <input type="text" id="search_name" name="search_name" value="{{ search_name }}" placeholder="Buscar por nome">
+
+            <label for="position">Cargo:</label>
+            <input type="text" id="position" name="position" value="{{ position_filter }}" placeholder="Filtrar por cargo">
+
+            <label for="department">Departamento:</label>
+            <input type="text" id="department" name="department" value="{{ department_filter }}" placeholder="Filtrar por departamento">
+
+            <label for="shift">Turno:</label>
+            <select name="shift" id="shift">
+                <option value="">Todos</option>
+                <option value="1" {% if shift_filter == '1' %}selected{% endif %}>Turno 1</option>
+                <option value="2" {% if shift_filter == '2' %}selected{% endif %}>Turno 2</option>
+                <option value="3" {% if shift_filter == '3' %}selected{% endif %}>Turno 3</option>
+            </select>
+
+            <label for="start_date">Período:</label>
+            <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}" required>
+
+            <label for="end_date"> - </label>
+            <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}" required>
+
+            <button type="submit" class="button">Filtrar</button>
+        </form>
+
+        <!-- Botões de Exportação -->
+        <div class="export-buttons">
+            <a href="{% url 'export_to_excel' %}?{{ request.GET.urlencode }}" class="button">Exportar para Excel</a>
+            <a href="{% url 'export_to_pdf' %}?{{ request.GET.urlencode }}" class="button">Exportar para PDF</a>
+        </div>
+
+        <!-- Tabela de Relatório -->
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th>Departamento</th>
+                    <th>Turno</th>
+                    <th>Presenças</th>
+                    <th>Faltas</th>
+                    <th>Atestados</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in report_data %}
+                    <tr>
+                        <td>{{ row.0 }}</td>
+                        <td>{{ row.1 }}</td>
+                        <td>{{ row.2 }}</td>
+                        <td>{{ row.3 }}</td>
+                        <td>{{ row.4 }}</td>
+                        <td>{{ row.5 }}</td>
+                        <td>{{ row.6 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

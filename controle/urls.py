@@ -13,8 +13,11 @@ urlpatterns = [
     path('warning/<int:warning_pk>/add_attachment/', views.add_attachment, name='add_attachment'),
     path('attachment/<int:attachment_pk>/delete/', views.delete_attachment, name='delete_attachment'),
     path('employee/<int:employee_pk>/delete/', views.delete_employee, name='delete_employee'),
-    path('attendance/', views.attendance_table, name='attendance_table'),  # Certifique-se de que o nome está correto
+    path('attendance/', views.attendance_table, name='attendance_table'),  
     path('attendance/update/<int:employee_pk>/<str:date>/', views.update_attendance, name='update_attendance'),
     path('attendance/export/', views.export_attendance_to_excel, name='export_attendance'),
     path('attendance/save-all/', views.save_all_attendance, name='save_all_attendance'),
+    path('generate_report/', views.generate_report, name='generate_report'),
+    path('export_to_excel/', views.export_to_excel, name='export_to_excel'),
+    path('export_to_pdf/', views.export_to_pdf, name='export_to_pdf'),
 ]
