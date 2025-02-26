@@ -43,17 +43,19 @@ class Attachment(models.Model):
     
 
 
+from django.db import models
+
 class Attendance(models.Model):
     ATTENDANCE_STATUS = [
         ('P', 'Presença'),
         ('F', 'Falta'),
-        ('A', 'Atestado/Declaração'),
-        ('N', 'Férias'),
+        ('AT', 'Atestado'),
+        ('AF', 'Atestado'),
+        ('FE', 'ferias'),
     ]
-
-    employee = models.ForeignKey(Employee, related_name='attendances', on_delete=models.CASCADE)
+    employee = models.ForeignKey('Employee', related_name='attendances', on_delete=models.CASCADE)
     date = models.DateField()
-    status = models.CharField(max_length=1, choices=ATTENDANCE_STATUS)
+    status = models.CharField(max_length=2, choices=ATTENDANCE_STATUS)
 
     class Meta:
         unique_together = ('employee', 'date')  # Garante que não haja duplicatas para o mesmo funcionário e data

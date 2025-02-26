@@ -19,8 +19,7 @@
         <!--     <button type="submit" placeholder="Faça uma busca" class="button">Pesquisar</button> -->
         </form>
 
-        <!-- Adicionar Funcionário -->
-        <a href="{% url 'add_employee' %}" class="button">Adicionar Funcionário</a>
+        
 
         <!-- Lista de Funcionários -->
         <ul>
@@ -35,7 +34,10 @@
             {% endfor %}
         </ul>
         
+        <button><a href="{% url 'add_employee' %}" class="button">Adicionar Funcionário</a></button>
+        <button><a href="{% url 'home' %}" class="button">Voltar a Home</a></button>
+        
     </div>
-    <a href="{% url 'home' %}" class="button">Voltar a Home</a>
+
 </body>
 </html>

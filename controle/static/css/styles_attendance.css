@@ -14,13 +14,13 @@ body {
 }
 
 .container {
-    max-width: 800px; /* Largura máxima do container */
+    max-width: 1200px; /* Largura máxima do container */
     margin: 0 auto; /* Centraliza o container */
     padding: 20px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow-x: auto; /* Permite rolagem horizontal se necessário */
+    
 }
 
 h1 {
@@ -59,8 +59,23 @@ form select {
     margin-bottom: 20px;
 }
 
+.container_tab{
+    display: flex;
+    max-width: 1200px;
+    max-height: 100%;
+    margin: 10px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
 
-.button {
+
+
+.button, a.button {
     display: inline-block;
     padding: 10px 15px;
     background-color: #dc0032;
@@ -73,7 +88,7 @@ form select {
 }
 
 .button:hover {
-    background-color: #2980b9;
+    background-color: #151513;
 }
 
 /* Estilo dos Filtros */
@@ -98,20 +113,14 @@ form select {
 
 .filter-section input:focus,
 .filter-section select:focus {
-    border-color: #3498db;
+    border-color: #dc0032;
     outline: none;
 }
 
-.filter-section button {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+
 
 .filter-section button:hover {
-    background-color: #2980b9;
+    background-color: #151513;
 }
 
 /* Barra de Pesquisa */

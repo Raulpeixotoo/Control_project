@@ -27,9 +27,11 @@
             <!-- Filtros -->
         <!-- Filtro de Intervalo de Datas -->
         <form method="get" style="margin-bottom: 20px;margin-left: 20%;">
+            <label for="end_date">Período entre:</label>
             <input type="date" name="start_date" id="start_date" value="{{ start_date|date:'Y-m-d' }}">
+            <label for="end_date"> - </label>
 
-            <label for="end_date">Entre:</label>
+
             <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}">
 
             <label for="shift"> Turno:</label>
@@ -42,89 +44,121 @@
 
             <button type="submit" class="button">Filtrar</button>
         </form>
+        
 
         <!-- Exibir Absenteísmo -->
         <p>Absenteísmo no período: <strong>{{ absenteeism }}%</strong></p>
         <p>Média de Presença no período: <strong>{{ average_presence_per_day }} </strong></p>
         <p>Média de Faltas no período: <strong>{{ average_absence_per_day }}</strong></p>
-        <h2 class='title'>Grafico de Presença</h2>
 
-        <!-- Gráfico de Barras -->
-        <canvas id="attendanceChart" width="1600" height="1200"></canvas>
+
+        <h1 class='title'>Resumo TECA</h1>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Turno</th>
+                    <th>Presenças</th>
+                    <th>Faltas</th>
+                    <th>Férias</th>
+                    <th>Atestado</th>
+                    <th>Afastamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shift in shift_data %}
+                    <tr>
+                        <td>{{ shift.shift }}</td>
+                        <td>{{ shift.presence }}</td>
+                        <td>{{ shift.absence }}</td>
+                        <td>{{ shift.vacancy }}</td>
+                        <td>{{ shift.atestad }}</td>
+                        <td>{{ shift.ausence }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <canvas id="attendanceChart" ></canvas>
         
         </div>
 
 
-    <!-- Script para o Gráfico -->
-    <script>
-        const attendanceData = {{ attendance_data|safe }};
-    
-        // Extrair dados para o gráfico
-        const labels = attendanceData.map(item => item.date);
-        const presenceData = attendanceData.map(item => item.presence);
-        const absenceData = attendanceData.map(item => item.absence);
-    
-        // Configurar o gráfico
-        const ctx = document.getElementById('attendanceChart').getContext('2d');
-        const attendanceChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Presenças',
-                        data: presenceData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                    },
-                    {
-                        label: 'Faltas',
-                        data: absenceData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                responsive: true, // Torna o gráfico responsivo
-                maintainAspectRatio: false, // Desativa a proporção fixa
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: Math.max(...presenceData, ...absenceData) + 1, // Define um limite máximo para o eixo Y
-                        min: - 5,
-                        ticks: {
-                            stepSize: 1, // Incremento de 1 no eixo Y
-                        },
-                    },
-                    x: {
-                        ticks: {
-                            autoSkip: true, // Evita que os rótulos do eixo X fiquem sobrepostos
-                            maxRotation: 45, // Rotação máxima dos rótulos
-                            minRotation: 0, // Rotação mínima dos rótulos
-                        },
-                    },
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'top',
-                        formatter: (value) => value || '', // Exibe apenas valores não nulos
-                        color: '#000',
-                        font: {
-                            weight: 'bold',
-                        },
-                    },
-                },
-            },
-            plugins: [ChartDataLabels], // Habilita o plugin
-        });
-    </script>
+        
     </div>
-</body>
+
+
+
+    <!-- Script para o Gráfico -->
+        <script>
+            // Obter os dados do Django
+            const attendanceData = {{ attendance_data|safe }};
+    
+            // Extrair dados para o gráfico
+            const labels = attendanceData.map(item => item.date);
+            const presenceData = attendanceData.map(item => item.presence);
+            const absenceData = attendanceData.map(item => item.absence);
+    
+            // Configurar o gráfico
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const attendanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Presenças',
+                            data: presenceData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                        },
+                        {
+                            label: 'Faltas',
+                            data: absenceData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true, // Torna o gráfico responsivo
+                    maintainAspectRatio: true, // Desativa a proporção fixa
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: Math.max(...presenceData, ...absenceData) + 1, // Define um limite máximo para o eixo Y
+                            ticks: {
+                                stepSize: 1, // Incremento de 1 no eixo Y
+                            },
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: true, // Evita que os rótulos do eixo X fiquem sobrepostos
+                                maxRotation: 45, // Rotação máxima dos rótulos
+                                minRotation: 0, // Rotação mínima dos rótulos
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value || '', // Exibe apenas valores não nulos
+                            color: '#000',
+                            font: {
+                                weight: 'bold',
+                            },
+                        },
+                    },
+                },
+                plugins: [ChartDataLabels], // Habilita o plugin
+            });
+        </script>
+    </body>
 </html>

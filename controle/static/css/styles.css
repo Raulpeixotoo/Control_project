@@ -11,6 +11,7 @@ body {
     color: #2c2b2b;
     line-height: 1.6;
     padding: 20px;  
+    
 }
 
 
@@ -25,7 +26,7 @@ body {
 }
 .container_user h1{
     text-align: center;
-    color: #dc0032;
+    color: #2c3e50;
     margin-top: 20px;
 }
 .container_user a{
@@ -67,14 +68,12 @@ p {
 }
 
 a {
-    color: #dc0032;
+    color: #2c3e50;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-a:hover {
-    color: #2c3e50;
-}
+
 
 
 /* Formulários */
@@ -118,6 +117,7 @@ textarea {
 ul {
     list-style-type: none;
     padding: 0;
+    margin-bottom: 35px
 }
 
 li {
@@ -149,8 +149,6 @@ li a {
 }
 
 
-
-
 /* Detalhes do Funcionário */
 .employee-details p {
     margin: 25px 10px;
@@ -174,7 +172,7 @@ li a {
 }
 
 .attachments a {
-    color: #dc0032;
+    color: #2c3e50;
     font-weight: bold;
 }
 
@@ -189,28 +187,10 @@ li a {
 }
 
 .title_name{
-    color: #dc0032;
+    color: #2c3e50;
     text-align: center;
 }
 
-a.button_add{
-    color: #dc0032;
-    margin: 5px 10px;
-}
-
-a.button_add:hover{
-    background-color: #dc0032;
-    color: #ffffff;
-    transition: background-color 0.3s ease;
-    border-radius: 5px;
-    border: 25px;
-
-}
-
-.button {
-    color: #2c2b2b;
-    background-color: #dc0032;
-}
 
 /* tela de login, fazer!! */
 input[type="text"],
@@ -224,55 +204,28 @@ input[type="password"] {
 
 button {
     padding: 10px;
-    background-color: #3498db;
+    background-color: #2c3e50;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    margin-right: 20%;
     transition: background-color 0.3s ease;
+}
+
+button a{
+
+    color: #fff;
+
 }
 
 button:hover {
-    background-color: #2980b9;
-}
-
-.messages {
-    margin-top: 15px;
-    color: #e74c3c;
+    background-color: #1a252f;
 }
 
 
 
-
-/*barra de pesquisa */
-.search-form {
-    margin-bottom: 20px;
-}
-
-.search-form input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.search-form button {
-    margin-top: 10px;
-    padding: 10px 15px;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.search-form button:hover {
-    background-color: #2980b9;
-}
 
 
 

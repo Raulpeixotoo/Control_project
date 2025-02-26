@@ -16,4 +16,5 @@ urlpatterns = [
     path('attendance/', views.attendance_table, name='attendance_table'),  # Certifique-se de que o nome está correto
     path('attendance/update/<int:employee_pk>/<str:date>/', views.update_attendance, name='update_attendance'),
     path('attendance/export/', views.export_attendance_to_excel, name='export_attendance'),
+    path('attendance/save-all/', views.save_all_attendance, name='save_all_attendance'),
 ]

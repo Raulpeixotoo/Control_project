@@ -11,12 +11,12 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-
         </form>
         <div class="actions">
             <button type="submit">Salvar</button>
-            <a href="{% url 'home' %}" class="button">Voltar ao Início</a>
-        </div>
-    </div>            
+            <a href="{% url 'employee_list' %}" class="button cancel">Voltar ao Início</a>
+        </div>        
+    </div>        
+ 
 </body>
 </html>
