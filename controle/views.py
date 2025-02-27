@@ -70,6 +70,43 @@ def employee_detail(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     return render(request, 'employee_detail.html', {'employee': employee})
 
+
+
+
+@login_required
+def add_warning_with_attachment(request, employee_pk):
+    employee = get_object_or_404(Employee, pk=employee_pk)
+
+    if request.method == 'POST':
+        warning_form = WarningForm(request.POST)
+        attachment_form = AttachmentForm(request.POST, request.FILES)
+
+        if warning_form.is_valid() and attachment_form.is_valid():
+            # Salvar a advertência
+            warning = warning_form.save(commit=False)
+            warning.employee = employee
+            warning.save()
+
+            # Salvar o anexo vinculado à advertência
+            attachment = attachment_form.save(commit=False)
+            attachment.warning = warning
+            attachment.save()
+
+            return redirect('employee_detail', pk=employee.pk)
+    else:
+        warning_form = WarningForm()
+        attachment_form = AttachmentForm()
+
+    return render(request, 'add_warning_with_attachment.html', {
+        'warning_form': warning_form,
+        'attachment_form': attachment_form,
+        'employee': employee,
+    })
+
+
+
+
+
 # Adicionar Funcionário
 @login_required
 def add_employee(request):
@@ -294,7 +331,6 @@ def export_attendance_to_excel(request):
     return response
 
 
-
 def attendance_table(request):
     # Obter os parâmetros de filtro
     start_date_str = request.GET.get('start_date', '')
@@ -368,7 +404,6 @@ def attendance_table(request):
         'selected_shift': selected_shift,
         'search_name': search_name,
     })
-
 
 @csrf_exempt
 def save_all_attendance(request):

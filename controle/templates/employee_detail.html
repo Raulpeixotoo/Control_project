@@ -14,9 +14,8 @@
             <p><strong>Departamento:</strong> {{ employee.department }}</p>
             <p><strong>Data de Admissão:</strong> {{ employee.admission_date }}</p>
         </div>
-
-        <h2 class="title_name" >Advertências</h2>
-        <a href="{% url 'add_warning' employee.pk %}" class="button_add">Adicionar Advertência</a>
+        <h2 class="title_name">Advertências</h2>
+        <a href="{% url 'add_warning_with_attachment' employee.pk %}" class="button_add">Adicionar Advertência e Anexo</a>
         <ul>
             {% for warning in employee.warnings.all %}
                 <li class="attachments_view">
@@ -26,23 +25,22 @@
                     <h3 class="title_name">Anexos</h3>
                     <div class="attachments">
                         <ul>
-                        {% for attachment in warning.attachments.all %}
-                            <li>
-                                <span>{{ attachment.file.name|default:"Sem nome" }}</span>
-                                <a href="{{ attachment.file.url }}" target="_blank"> -- Download </a>
-<!--                          <a href="{% url 'delete_attachment' attachment.pk %}" 
-                                   onclick="return confirm('Tem certeza que deseja remover este anexo?');" 
-                                   class="button cancel">Remover</a>    -->      
-                            </li>
-                        {% endfor %}
+                            {% for attachment in warning.attachments.all %}
+                                <li>
+                                    <span>{{ attachment.file.name|default:"Sem nome" }}</span>
+                                    <a href="{{ attachment.file.url }}" target="_blank"> -- Download </a>
+                                    <!-- 
+                                    <a href="{% url 'delete_attachment' attachment.pk %}" 
+                                       onclick="return confirm('Tem certeza que deseja remover este anexo?');" 
+                                       class="button cancel">Remover</a>    
+                                    -->
+                                </li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </li>
-                <div class="actions">
-                    <a href="{% url 'add_attachment' warning.pk %}" class="button">Adicionar Anexo</a>
-                </div>
-                {% endfor %}
-            </ul>
+            {% endfor %}
+        </ul>
     </div>
 </body>
 </html>

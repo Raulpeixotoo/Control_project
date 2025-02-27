@@ -15,15 +15,14 @@
         <div class="filter-section">
             <form method="get" style="margin-bottom: 20px;">
                 <!-- Barra de Pesquisa -->
-                <input type="text" name="search" placeholder="Pesquisar por nome..." value="{{ search_query }}">
-
+                <input type="text" name="search" placeholder="Pesquisar por nome..." value="{{ search_name }}">
+                
                 <!-- Filtro de Mês -->
                 <label for="start_date">Período</label>
                 <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}" required>
-
                 <label for="end_date"> - </label>
                 <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}" required>
-
+                
                 <!-- Filtro de Turno -->
                 <label for="shift">Selecione o Turno:</label>
                 <select name="shift" id="shift">
@@ -32,7 +31,7 @@
                     <option value="2" {% if selected_shift == '2' %}selected{% endif %}>Turno 2</option>
                     <option value="3" {% if selected_shift == '3' %}selected{% endif %}>Turno 3</option>
                 </select>
-
+                
                 <!-- Botão de Aplicar Filtros -->
                 <button type="submit" class="button">Filtrar</button>
             </form>
@@ -44,42 +43,47 @@
     </div>
     
 
-    
     <!-- Tabela de Chamadas -->
-    <div class= container_tab>
-    <table border="1" cellpadding="20" cellspacing="5">
-        <thead>
-            <tr>
-                <th>Funcionário</th>
-                {% for date in dates %}
-                    <th>{{ date|date:"d/m" }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for employee in employees %}
+    <div class="container_tab">
+        <table border="1" cellpadding="20" cellspacing="5">
+            <thead>
                 <tr>
-                    <td>{{ employee.name }} (Turno {{ employee.get_shift_display }})</td>
+                    <th>Funcionário</th>
                     {% for date in dates %}
-                        <td>
-                            <form method="post" action="{% url 'update_attendance' employee.pk date|date:'Y-m-d' %}" style="display: inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="csrfmiddlewaretoken" value="...">
-                                <select name="status">
-                                    <option value="P" {% if attendance_data|get_item:employee|get_item:date == 'P' %}selected{% endif %}>P</option>
-                                    <option value="F" {% if attendance_data|get_item:employee|get_item:date == 'F' %}selected{% endif %}>F</option>
-                                    <option value="AT" {% if attendance_data|get_item:employee|get_item:date == 'AT' %}selected{% endif %}>AT</option>
-                                    <option value="AF" {% if attendance_data|get_item:employee|get_item:date == 'AF' %}selected{% endif %}>AF</option>
-                                    <option value="FE" {% if attendance_data|get_item:employee|get_item:date == 'FE' %}selected{% endif %}>FE</option>
-                                    <option value="-" {% if attendance_data|get_item:employee|get_item:date == '-' %}selected{% endif %}>-</option>
-                                </select>
-                            </form>
-                        </td>
+                        <th>{{ date|date:"d/m" }}</th>
                     {% endfor %}
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.name }} ( {{ employee.get_shift_display }})</td>
+                        {% for date in dates %}
+                            <td>
+                                {% with attendance=attendance_data|get_item:employee|get_item:date %}
+                                    <form method="post" action="{% url 'update_attendance' employee.pk date|date:'Y-m-d' %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <select name="status">
+                                            <option value="P" {% if attendance == 'P' %}selected{% endif %}>P</option>
+                                            <option value="F" {% if attendance == 'F' %}selected{% endif %}>F</option>
+                                            <option value="AT" {% if attendance == 'AT' %}selected{% endif %}>AT</option>
+                                            <option value="AF" {% if attendance == 'AF' %}selected{% endif %}>AF</option>
+                                            <option value="FE" {% if attendance == 'FE' %}selected{% endif %}>FE</option>
+                                            <option value="-" {% if attendance == '-' %}selected{% endif %}>-</option>
+                                        </select>
+                                    </form>
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="{{ dates|length|add:1 }}">Nenhum funcionário encontrado com os filtros aplicados.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
         <!-- Botão para Salvar Todas as Alterações -->
         <button id="save-all" class="button">Salvar Alterações</button>
 
@@ -105,8 +109,8 @@
                     return; // Ignora formulários com URLs inválidas
                 }
         
-                const employee_pk = match[1]; // Captura o employee_pk (número)
-                const date = match[2];        // Captura a data (YYYY-MM-DD)
+                const employee_pk = match[1]; 
+                const date = match[2];        
         
                 console.log('Extraído - employee_pk:', employee_pk, 'date:', date);
         

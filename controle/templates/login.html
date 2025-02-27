@@ -5,6 +5,23 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles_login.css' %}">
 </head>
+<!--body>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" action="{% url 'login' %}" class="button">Entrar</button>
+        </form>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div -->
+
     <body>
         <section class="container">
             <div class="login-container">

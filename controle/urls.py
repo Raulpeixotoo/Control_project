@@ -20,4 +20,5 @@ urlpatterns = [
     path('generate_report/', views.generate_report, name='generate_report'),
     path('export_to_excel/', views.export_to_excel, name='export_to_excel'),
     path('export_to_pdf/', views.export_to_pdf, name='export_to_pdf'),
+    path('employee/<int:employee_pk>/add_warning_with_attachment/', views.add_warning_with_attachment, name='add_warning_with_attachment'),
 ]

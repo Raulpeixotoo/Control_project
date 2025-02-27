@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title class="title_name">Adicionar Advertência e Anexo</title>
+    <title>Adicionar Advertência e Anexo</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1 class="title_name">Adicionar Advertência e Anexo</h1>
+        <h1>Adicionar Advertência e Anexo</h1>
+        <p><strong>Funcionário:</strong> {{ employee.name }}</p>
+
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
+
             <!-- Formulário de Advertência -->
             <h2>Advertência</h2>
             {{ warning_form.as_p }}
-            
+
             <!-- Formulário de Anexo -->
             <h2>Anexo</h2>
             {{ attachment_form.as_p }}
-            
+
             <div class="actions">
                 <button type="submit">Salvar</button>
-                <a href="{% url 'employee_list' %}" class="button cancel">Voltar ao Início</a>
-            </div>        
+                <a href="{% url 'employee_detail' pk=employee.pk %}" class="button cancel">Cancelar</a>
+            </div>
         </form>
-    </div>        
+    </div>
 </body>
 </html>

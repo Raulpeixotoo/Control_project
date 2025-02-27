@@ -3,7 +3,7 @@
 <head>
     <title>Relatório Gerencial</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles_attendance.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <div class="container">
@@ -45,17 +45,7 @@
 
         <!-- Tabela de Relatório -->
         <table border="1" cellpadding="10">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Cargo</th>
-                    <th>Departamento</th>
-                    <th>Turno</th>
-                    <th>Presenças</th>
-                    <th>Faltas</th>
-                    <th>Atestados</th>
-                </tr>
-            </thead>
+
             <tbody>
                 {% for row in report_data %}
                     <tr>
